@@ -1,0 +1,21 @@
+# This is action definition filel
+# This has three parts: Goal, Result and Feedback
+#
+# Part1: Goal (Client send)
+#
+# Time to wait
+duration time_to_wait
+---
+# Part2: Result (Server send after finished)
+#
+# Actually wainting time (elapsed time)
+duration time_elapsed
+# The number of sending update
+uint32 updates_sent
+---
+# Part3: Feedback (Server send temporary while running)
+#
+# Elapsed time from beginning of timer
+duration time_elapsed
+# Remaining time to complete
+duration time_remaining
