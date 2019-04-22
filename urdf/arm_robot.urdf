@@ -1,0 +1,142 @@
+<?xml version="1.0"?>
+<robot name="arm_robot">
+
+  <!-- CREATE LINKS
+       - world : Anchor to fix base_link
+       - base_link : Fix to world
+       - arm1_link : Intermidiate link connected to base_link and arm2_link
+       - arm2_link : Top link connected to arm1_link
+  -->
+
+  <!-- world -->
+  <link name="world"/>
+
+  <!--Joint to combine "arm1" with "world" -->
+  <joint name="joint_world_arm1" type="fixed">
+    <parent link="world"/>
+    <child link="arm1_link"/>
+  </joint>
+  <!-- arm1 link -->
+  <link name="arm1_link">
+    <inertial>
+      <!-- rpy: roll, pitch, yaw -->
+      <origin xyz="0 0 0.5" rpy="0 0 0"/>
+      <mass value="1.0"/>
+      <inertia ixx="1.0" ixy="0.0" ixz="0.0" iyy="0.0" iyz="0.0" izz="1.0"/>
+    </inertial>
+    <visual>
+      <origin xyz="0 0 0.5" rpy="0 0 0"/>
+      <geometry>
+        <box size="0.2 0.2 1.0"/>
+      </geometry>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0.5" rpy="0 0 0"/>
+      <geometry>
+        <box size="0.2 0.2 1.0"/>
+      </geometry>
+    </collision>
+  </link>
+  <gazebo reference="arm1_link">
+    <material>Gazebo/Red</material>
+  </gazebo>
+
+  <!-- Joint to combine "arm2_link" with "arm1_link" -->
+  <joint name="joint_arm1_arm2" type="continuous">
+    <parent link="arm1_link"/>
+    <child link="arm2_link"/>
+    <axis xyz="0 1 0"/>
+    <origin xyz="0 0.1 0.9" rpy="0 0 0"/>
+    <dynamics damping="0.1"/>
+  </joint>
+  <!-- Transmission of "joint_arm1_arm2" -->
+  <transmission name="trans_arm1_arm2">
+    <type>transmission_interface/SimpleTransmission</type>
+    <!-- Set joint name and H/W interface to control -->
+    <joint name="joint_arm1_arm2">
+      <!-- Interfaces except for "EffortJoinInterface" are not supported -->
+      <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+    </joint>
+    <!-- Basically use "EffortJointInterface" -->
+    <actuator name="motor_arm1_arm2">
+      <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+      <mechanismReduction>1</mechanismReduction>
+    </actuator>
+  </transmission>
+  <!-- arm2 link -->
+  <link name="arm2_link">
+    <inertial>
+      <mass value="1.0"/>
+      <origin xyz="0 0.1 0.15" rpy="0 0 0"/>
+      <inertia ixx="1.0" ixy="0.0" ixz="0.0" iyy="1.0" iyz="0.0" izz="1.0"/>
+    </inertial>
+    <visual>
+      <origin xyz="0 0.1 0.15" rpy="0 0 0"/>
+      <geometry>
+        <box size="0.2 0.2 0.5"/>
+      </geometry>
+    </visual>
+    <collision>
+      <origin xyz="0 0.1 0.15" rpy="0 0 0"/>
+      <geometry>
+        <box size="0.2 0.2 0.5"/>
+      </geometry>
+    </collision>
+  </link>
+  <gazebo reference="arm2_link">
+    <material>Gazebo/Blue</material>
+  </gazebo>
+
+  <!-- Joint to combine "arm3_link" with "arm2_link" -->
+  <joint name="joint_arm2_arm3" type="continuous">
+    <parent link="arm2_link"/>
+    <child link="arm3_link"/>
+    <axis xyz="0 0 1"/>
+    <origin xyz="0 0.1 0.4"/>
+    <dynamics damping="0.1"/>
+  </joint>
+  <!-- Transmission of "joint_arm2_arm3" -->
+  <transmission name="trans_arm2_arm3">
+    <type>transmission_interface/SimpleTransmission</type>
+    <joint name="joint_arm2_arm3">
+      <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+    </joint>
+    <actuator name="motor_arm2_arm3">
+      <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+      <mechanismReduction>1</mechanismReduction>
+    </actuator>
+  </transmission>
+  <!-- arm3 link -->
+  <link name="arm3_link">
+    <inertial>
+      <mass value="1.0"/>
+      <origin xyz="0.4 0 0.05" rpy="0 0 0"/>
+      <inertia ixx="1.0" ixy="0.0" ixz="0.0" iyy="1.0" iyz="0.0" izz="1.0"/>
+    </inertial>
+    <visual>
+      <origin xyz="0.4 0 0.05" rpy="0 0 0"/>
+      <geometry>
+	<box size="1.0 0.1 0.1"/>
+      </geometry>
+    </visual>
+    <collision>
+      <origin xyz="0.4 0 0.05" rpy="0 0 0"/>
+      <geometry>
+	<box size="1.0 0.1 0.1"/>
+      </geometry>
+    </collision>
+  </link>
+  <gazebo reference="arm3_link">
+    <material>Gazebo/Green</material>
+  </gazebo>
+
+  <gazebo>
+    <!-- Load "ROS control" -->
+    <plugin name="gazebo_ros_control" filename="libgazebo_ros_control.so">
+      <!-- Set the same name of robot name in line 2 -->
+      <robotNamespace>/arm_robot</robotNamespace>
+      <!-- An error occurs without this tag -->
+      <legacyModeNS>ture</legacyModeNS>
+    </plugin>
+  </gazebo>
+</robot>
