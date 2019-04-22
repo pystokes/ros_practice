@@ -1,11 +1,18 @@
 <?xml version="1.0"?>
 <robot name="arm_robot">
 
-  <!-- CREATE LINKS
-       - world : Anchor to fix base_link
-       - base_link : Fix to world
-       - arm1_link : Intermidiate link connected to base_link and arm2_link
-       - arm2_link : Top link connected to arm1_link
+  <!--
+    LINKS
+      - world : Anchor to fix base_link
+      - arm1_link : Fixed to world
+      - arm2_link : Intermidiate link connected to arm1_link and arm3_link
+      - arm3_link : Top link connected to arm2_link
+    ABOUT "origin"
+      - "origin" tag in "link" tag
+        - The origin is set as center of gravity by default
+        - Change the position of origin by setting <origin> tag and moving object
+      - "origin" tag in "joint" tag
+        - Vector from parent origin to child origin
   -->
 
   <!-- world -->
