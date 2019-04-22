@@ -16,6 +16,8 @@ radian = 0
 while not rospy.is_shutdown():
 
     # Fix the direction of arm2
+    #   However the direction of arm2 is constant,
+    #   need to keep sending a message not to stop robot
     pub_joint1.publish(1)
 
     # Rotate arm3
